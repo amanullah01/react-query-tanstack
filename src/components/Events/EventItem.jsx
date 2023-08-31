@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+/* eslint-disable react/prop-types */
+import { Link } from "react-router-dom";
 
 export default function EventItem({ event }) {
-  const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
   return (
     <article className="event-item">
