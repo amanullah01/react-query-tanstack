@@ -4,8 +4,11 @@ import Header from "../Header.jsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteEvent, fetchEvent, queryClient } from "../util/http.js";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
+import { useState } from "react";
+import Modal from "../UI/Modal.jsx";
 
 export default function EventDetails() {
+  const [isDeleting, setIsDeleting] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const { data, isPending, isError, error } = useQuery({
@@ -23,6 +26,14 @@ export default function EventDetails() {
       navigate("/events");
     },
   });
+
+  const handleStartDelete = () => {
+    setIsDeleting(true);
+  };
+
+  const handleStopDelete = () => {
+    setIsDeleting(false);
+  };
 
   const handleDelete = () => {
     mutate({ id: params.id });
@@ -58,10 +69,27 @@ export default function EventDetails() {
     });
     content = (
       <>
+        {isDeleting && (
+          <Modal onClose={handleStopDelete}>
+            <h2>Are you sure?</h2>
+            <p>
+              Do you really want to delete this event? This action cannot be
+              undone.
+            </p>
+            <div className="form-actions">
+              <button onClick={handleStopDelete} className="button-text">
+                Cancle
+              </button>
+              <button onClick={handleDelete} className="button">
+                Delete
+              </button>
+            </div>
+          </Modal>
+        )}
         <header>
           <h1>{data.title}</h1>
           <nav>
-            <button onClick={handleDelete}>Delete</button>
+            <button onClick={handleStartDelete}>Delete</button>
             <Link to="edit">Edit</Link>
           </nav>
         </header>
